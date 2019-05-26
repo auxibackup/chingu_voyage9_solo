@@ -6,7 +6,45 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Connect Web 4 Game</title>
 </head>
+<style>
+    body {
+        background-color: #1E326D;
+    }
+   #grid {
+       background-color: #1F42B6;
+       display: inline-block;
+        text-align: center;
+   }
+
+
+   .coin {
+       width: 70px;
+       height: 70px;
+       display: inline-block;
+       background-color: #1E326D;
+       border-radius: 50%;
+       margin: 5px;
+   }
+</style>
 <body>
-    Hello world
+    <div id='grid'></div>
+    <script>
+        const ROW = 6;
+        const COL = 7;
+        const grid = document.getElementById('grid')
+
+        for(let i = 0; i < ROW; ++i){
+            let rowDiv = document.createElement('div');
+            rowDiv.className = 'row'
+
+            for(let j = 0; j < COL; ++j){
+                let coin = document.createElement('div');
+                coin.className = 'coin';
+                rowDiv.append(coin);
+            }
+            grid.append(rowDiv);
+        }
+        
+    </script>
 </body>
 </html>
