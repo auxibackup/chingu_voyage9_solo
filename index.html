@@ -25,26 +25,66 @@
        border-radius: 50%;
        margin: 5px;
    }
+   .player1 {
+       background-color: #FCCE10;
+   }
+   .player2{ 
+       background-color: #CC39A1; 
+   }
+
+   
 </style>
 <body>
     <div id='grid'></div>
     <script>
         const ROW = 6;
         const COL = 7;
+        const data = [] // stores position of each player's moves
         const grid = document.getElementById('grid')
+        
+        var currentPlayer = 1;
 
+        // Initialize grid && data
         for(let i = 0; i < ROW; ++i){
             let rowDiv = document.createElement('div');
             rowDiv.className = 'row'
 
+            data.push([])
+
             for(let j = 0; j < COL; ++j){
                 let coin = document.createElement('div');
                 coin.className = 'coin';
+                coin.setAttribute('row_idx', i);
+                coin.setAttribute('col_idx', j);
                 rowDiv.append(coin);
+
+                data[i].push(0)
             }
             grid.append(rowDiv);
         }
         
+        // check if class name exists in current element. 
+        const hasClassName = (str, className) => str.includes(className);
+
+        grid.addEventListener('click',function(event){
+            event.preventDefault();
+            if(event.target.matches('.coin'))
+            {   
+                let r = event.target.getAttribute('row_idx');
+                let c = event.target.getAttribute('col_idx');
+
+
+                if(data[r][c] === 0){
+                    event.target.className += ` player${currentPlayer}`;
+                    data[r][c] = currentPlayer; 
+
+                    currentPlayer = (currentPlayer === 1)? 2 : 1;                    
+                }
+           
+            }
+
+        })
+
     </script>
 </body>
 </html>
