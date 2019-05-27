@@ -1,0 +1,61 @@
+    :root {
+        --player1-gradient: linear-gradient(to right, #FCD60E, #F36F6C);
+        --player2-gradient: linear-gradient(to right, #CC39A1, #7839CD);
+    }
+    body {
+        background-color: #1E326D;
+    }
+   #grid {
+        background-color: #1F42B6;
+        display: inline-block;
+        text-align: center;
+        padding: 50px;
+        border-top-left-radius: 15%;
+        border-top-right-radius: 15%;
+   }
+
+   .container  {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+   }
+
+
+   #gameover-header {
+       height: 80px;
+       width: 80px;
+       border-radius: 50%;
+       display: none;
+   }
+   #display-header {
+       border-radius: 20px;
+        height: 40px;
+        min-width: 500px;
+        text-align: center;
+   }
+   .coin {
+       width: 80px;
+       height: 80px;
+       display: inline-block;
+       background-color: #1E326D;
+       border-radius: 50%;
+       margin: 5px;
+   }
+   .player1 {
+       background-image: var(--player1-gradient);
+   }
+   .player2 { 
+       background-image: var(--player2-gradient); 
+   }
+
+   #reset {
+       background-color: #F46E6F;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px 0 0 0;
+   }
+   .label {
+       font-size: .9em;
+       margin: -20px;
+       color: white;
+   }
