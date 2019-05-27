@@ -7,6 +7,10 @@
     <title>Connect Web 4 Game</title>
 </head>
 <style>
+    :root {
+        --player1-gradient: linear-gradient(to right, #FCD60E, #F36F6C);
+        --player2-gradient: linear-gradient(to right, #CC39A1, #7839CD);
+    }
     body {
         background-color: #1E326D;
     }
@@ -14,59 +18,80 @@
         background-color: #1F42B6;
         display: inline-block;
         text-align: center;
+        padding: 50px;
+        border-top-left-radius: 15%;
+        border-top-right-radius: 15%;
    }
 
+   .container  {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+   }
+
+
+   #gameover-header {
+       height: 80px;
+       width: 80px;
+       border-radius: 50%;
+       display: none;
+   }
+   #display-header {
+       border-radius: 20px;
+        height: 40px;
+        min-width: 500px;
+        text-align: center;
+   }
    .coin {
-       width: 70px;
-       height: 70px;
+       width: 80px;
+       height: 80px;
        display: inline-block;
        background-color: #1E326D;
        border-radius: 50%;
        margin: 5px;
    }
    .player1 {
-       background-color: #FCCE10;
+       background-image: var(--player1-gradient);
    }
-   .player2{ 
-       background-color: #CC39A1; 
+   .player2 { 
+       background-image: var(--player2-gradient); 
    }
 
-   
+   #reset {
+       background-color: #F46E6F;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px 0 0 0;
+   }
+   .label {
+       font-size: .9em;
+       margin: -20px;
+       color: white;
+   }
+
 </style>
 <body>
-    <div id='grid'></div>
+    <div class='container'>
+        <div id='gameover-header'></div>
+        <div><h1 id='display-header'>Player 1, please select a coin slot.</h1></div>
+        <div id='grid'></div>
+        <div><button id='reset'>Reset Game</button></div>
+    </div>
     <script>
         const ROW = 6;
         const COL = 7;
-        const data = [] // stores position of each player's moves
-        const grid = document.getElementById('grid')
+        var data; // stores position of each player's moves
+        const grid = document.querySelector('#grid');
+        const displayHeader = document.querySelector('#display-header');
+        const gameoverHeader = document.querySelector('#gameover-header');
+        const resetButton = document.querySelector('#reset');
+        var currentPlayer;
+
+
         
-        var currentPlayer = 1;
-
-        // Initialize grid && data
-        for(let i = 0; i < ROW; ++i){
-            let rowDiv = document.createElement('div');
-            rowDiv.className = 'row'
-
-            data.push([])
-
-            for(let j = 0; j < COL; ++j){
-                let coin = document.createElement('div');
-                coin.className = 'coin';
-                coin.setAttribute('row_idx', i);
-                coin.setAttribute('col_idx', j);
-                rowDiv.append(coin);
-
-                data[i].push(0)
-            }
-            grid.append(rowDiv);
-        }
-        
-        // check if class name exists in current element. 
-        // const hasClassName = (str, className) => str.includes(className);
-
         grid.addEventListener('click',function(event){
             event.preventDefault();
+
             if(event.target.matches('.coin'))
             {   
                 let r = event.target.getAttribute('row_idx');
@@ -79,12 +104,68 @@
 
                     // check win
                     const win = isWinningPiece(data, currentPlayer);
-                    if(win) console.log(`Player: ${currentPlayer} wins!`)
-                    // flip players
-                    currentPlayer = (currentPlayer === 1)? 2 : 1; 
+                    if(win){ 
+                        displayHeader.textContent = `Player ${currentPlayer} Wins!`;
+                        gameoverHeader.style.display = 'inline-block';
+                        gameoverHeader.style.backgroundImage = `var(--player${currentPlayer}-gradient)`;
+                    } else {
+                        currentPlayer = (currentPlayer === 1)? 2 : 1; 
+                        displayHeader.textContent = `Player ${currentPlayer}, please select a coin slot.`
+                        displayHeader.style.backgroundImage = `var(--player${currentPlayer}-gradient)`;
+                    }
                 }
             }
         })
+
+        resetButton.addEventListener('click', function(event){
+            reset();
+        })
+        var init = function _init() {
+            data = [];
+            currentPlayer = 1;
+            displayHeader.style.backgroundImage = `var(--player${currentPlayer}-gradient)`;
+
+            // Initialize grid && data
+            for(let i = 0; i < ROW; ++i){
+                let rowDiv = document.createElement('div');
+
+                rowDiv.className = 'row'
+
+                data.push([])
+                for(let j = 0; j < COL; ++j){
+                    let coin = document.createElement('div');
+                    let coinLabel = document.createElement('p');
+
+                    coin.className = 'coin';
+                    coinLabel.className = 'label'
+
+                    coin.setAttribute('row_idx', i);
+                    coin.setAttribute('col_idx', j);
+                    coinLabel.textContent = `[${i}-${j}]`;
+
+                    coin.append(coinLabel);
+                    rowDiv.append(coin);
+
+                    data[i].push(0)
+                }
+                grid.append(rowDiv);
+            }
+        }
+
+        var reset = function _reset() {
+            currentPlayer = 1;
+
+            gameoverHeader.style.display = 'none';
+            displayHeader.textContent = `Player ${currentPlayer}, please select a coin slot.`;
+            displayHeader.style.backgroundImage = `var(--player${currentPlayer}-gradient)`;
+            grid.querySelectorAll('.coin').forEach( coin => coin.className = 'coin');
+
+            for(let r = 0; r < ROW; ++r){
+                for(let c = 0; c < COL; ++c){
+                    data[r][c] = 0;
+                }
+            }
+        }
 
         var checkHorizontal = function _checkHorizontal(board, player){
             for(let r = 0; r < ROW; ++r){
@@ -145,7 +226,9 @@
 
             return false;
         }
-   
+        
+        init();
+
 
     </script>
 </body>
